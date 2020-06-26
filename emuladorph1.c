@@ -5,7 +5,7 @@ int main(int argc, char **argv)
 {
 
     FILE *arq;
-    int ac; //acumulador
+    int ac=0; //acumulador
     int rem; //registrador endereco de memoria
     int rdm; //registrador de dados de memoria
     int mem[256]; //tamanho maximo de memoria é 256bytes
@@ -204,19 +204,21 @@ int main(int argc, char **argv)
             pc = rdm;
             continue;
         }
-
         if(ri == 0xC0)
         {
             if(ac==0)
             {
             pc= pc+2;
-            cont++;
             printf("JEQ %x ; ", rdm); ///operação Jeq
             printf("se (AC = 0)PC <- %x\n", rdm);
-            rem = rdm;
             rdm = mem[rem+1];
             pc = rdm;
             }
+            else
+            {
+                pc = pc+2;
+            }
+            cont++;
             continue;
         }
 
@@ -227,10 +229,14 @@ int main(int argc, char **argv)
             pc= pc+2;
             printf("JG %x ; ", rdm); ///operação JG
             printf("se (AC > 0)PC <- %x\n", rdm);
-            rem = rdm;
             rdm = mem[rem+1];
             pc = rdm;
             }
+            else
+            {
+                pc = pc+2;
+            }
+            cont++;
             continue;
         }
 
@@ -239,13 +245,16 @@ int main(int argc, char **argv)
              if(ac<0)
             {
             pc= pc+2;
-            cont++;
             printf("JL %x ; ", rdm); ///operação JL
             printf("se (AC < 0)PC <- %x\n", rdm);
-            rem = rdm;
             rdm = mem[rem+1];
             pc = rdm;
             }
+            else
+            {
+                pc = pc+2;
+            }
+            cont++;
             continue;
         }
 
@@ -272,7 +281,7 @@ int main(int argc, char **argv)
 
     printf("\nMemory:\n", pc);
 
-    for(i=128; i<255; i++)
+    for(i=128; i<256; i++)
     {
         if(backup[i] != mem[i])
         {
